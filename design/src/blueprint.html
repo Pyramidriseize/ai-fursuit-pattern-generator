@@ -1,0 +1,18 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Furge blueprint sheet</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>html, body { background: #000; } #s svg { width: 100%; height: auto; }</style>
+<div id="s"></div>
+<script src="pattern.js"></script>
+<script src="generated/fs-data.js"></script>
+<script src="sheet.js"></script>
+<script>
+  const q = new URLSearchParams(location.search);
+  const draw = { shark: FurgeSheet.sharkSVG, bodysuit: FurgeSheet.bodysuitSVG, head: FurgeSheet.headSVG }[q.get('sheet') || 'head'];
+  const { svg, N } = draw({ theme: q.get('theme') || 'cyan' });
+  document.getElementById('s').innerHTML = svg;
+  window.sheetSource = svg;
+  console.log('scale 1:' + N);
+</script>

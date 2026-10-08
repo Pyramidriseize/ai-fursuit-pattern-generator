@@ -1,0 +1,120 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Furge Blueprint Studio</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  #sheet { position: absolute; left: 12px; top: 72px; width: 604px; height: 427px; overflow: hidden; border-radius: 6px; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.16); }
+  #sheet > svg { width: 100%; height: 100%; }
+  #scan { position: absolute; left: 12px; width: 604px; height: 2px; background: var(--gradient-brand); box-shadow: 0 0 14px 2px rgb(255 55 95 / 0.7); }
+</style>
+<div class="win">
+  <div id="side" style="display:contents"></div>
+  <main class="main">
+    <header class="bar">
+      <h1>Finn, shark</h1>
+      <div class="seg"><span class="on">Body</span><span>Fins</span><span>Handpaws</span><span>Feetpaws</span></div>
+    </header>
+    <div class="canvas" id="canvas">
+      <div id="sheet"></div>
+      <div id="scan"></div>
+      <div class="note" id="note" style="position:absolute;left:14px;top:12px">Real pattern by FreeSewing contributors (MIT), not Furge output</div>
+      <div id="empty" style="position:absolute;inset:0 0 84px;display:grid;place-content:center;text-align:center;gap:6px">
+        <div style="font:600 24px/1.15 var(--font-display);letter-spacing:-.022em">Describe your fursona.</div>
+        <div style="color:var(--color-text-muted);font-size:14px">Furge drafts every piece, ready to cut.</div>
+      </div>
+      <div class="glow" id="glow"><i class="soft"></i><i></i></div>
+      <div class="prompt">
+        <div class="text" id="ptext"></div>
+        <div class="btn" id="draft"></div>
+      </div>
+      <div class="toast" id="toast"></div>
+    </div>
+  </main>
+  <aside class="insp">
+    <section>
+      <h3>Cut list</h3>
+      <div id="cut"></div>
+    </section>
+    <section>
+      <h3>Fit</h3>
+      <div class="row"><span>Size</span><span class="num">100%</span></div>
+      <div class="row"><span>Seam allowance</span><span class="num">10 mm</span></div>
+    </section>
+    <div class="foot">
+      <div class="btn" id="export"></div>
+      <div class="pair"><div class="btn">SVG</div><div class="btn">DXF</div></div>
+    </div>
+  </aside>
+  <div id="cur" style="display:contents"></div>
+</div>
+<script src="furge.js"></script>
+<script src="ui.js"></script>
+<script src="pattern.js"></script>
+<script src="generated/fs-data.js"></script>
+<script src="sheet.js"></script>
+<script>
+  const { icon, sidebar, cursorSVG, easeIO, span, glowCSS } = FurgeUI;
+  const $ = (id) => document.getElementById(id);
+  $('side').innerHTML = sidebar('Blueprints');
+  $('cur').innerHTML = cursorSVG;
+  document.querySelector('.win').appendChild($('cursor'));
+  $('sheet').innerHTML = FurgeSheet.sharkSVG({ theme: 'cyan' }).svg;
+
+  const PROMPT = 'Blue shark, big dorsal fin, friendly teeth';
+  const CUT = FurgeFS.hi.parts;
+  const SCAN = [3.7, 6.0], SHEET_TOP = 72, SHEET_H = 427;
+
+  const KEY = { draft: [741, 630], export: [961, 595] };
+  function cursorAt(t) {
+    const home = [600, 420];
+    const a = easeIO(span(t, 2.9, 3.4));
+    const b = easeIO(span(t, 6.3, 7.0));
+    return [home[0] + (KEY.draft[0] - home[0]) * a + (KEY.export[0] - KEY.draft[0]) * b, home[1] + (KEY.draft[1] - home[1]) * a + (KEY.export[1] - KEY.draft[1]) * b];
+  }
+
+  window.seek = (t, still = false) => {
+    const typed = Math.floor(span(t, 0.5, 2.8) * PROMPT.length);
+    const drafting = t >= 3.55 && t < 6.2;
+    const done = t >= 6.2;
+    const p = span(t, SCAN[0], SCAN[1]);
+    $('empty').style.opacity = 1 - span(t, 3.55, 3.8);
+    $('sheet').style.opacity = p > 0 ? 1 : 0;
+    $('sheet').style.clipPath = `inset(0 0 ${(1 - p) * 100}% 0)`;
+    $('scan').style.top = `${SHEET_TOP + SHEET_H * p}px`;
+    $('scan').style.opacity = p > 0 && p < 1 ? 1 : 0;
+    $('note').style.opacity = span(t, 3.7, 4.0);
+    const caret = t < 3.55 && (t < 2.8 || Math.floor(t * 3) % 2 === 0) ? '<span class="caret"></span>' : '';
+    $('ptext').innerHTML = typed === 0 && t < 3.55
+      ? `${caret}<span class="ph">Describe your fursona</span>`
+      : `${PROMPT.slice(0, typed)}${still ? '' : caret}`;
+
+    const b = $('draft');
+    b.className = done ? 'btn' : 'btn solid';
+    b.innerHTML = done ? `${icon('sparkle', 15)}Draft again` : drafting ? 'Drafting…' : `${icon('sparkle', 15)}Draft pattern`;
+    b.style.scale = t >= 3.45 && t < 3.6 ? 0.96 : 1;
+
+    const e = $('export');
+    e.className = done ? 'btn solid' : 'btn';
+    e.style.opacity = done ? 1 : 0.45;
+    e.innerHTML = `${icon('download', 15)}Export PDF`;
+    e.style.scale = t >= 7.05 && t < 7.2 ? 0.96 : 1;
+
+    $('cut').innerHTML = CUT.map((c, i) => `<div class="row" style="opacity:${span(t, 3.9 + i * 0.22, 4.15 + i * 0.22)}"><span><span class="code">${c.nr}</span>${c.name}</span><span class="num">× ${c.qty}</span></div>`).join('');
+
+    const g = $('glow');
+    const gOp = Math.min(span(t, 3.55, 3.9), 1 - span(t, 5.9, 6.3));
+    g.style.opacity = still ? 0 : gOp;
+    if (gOp > 0) g.querySelectorAll('i').forEach((i) => { i.style.background = glowCSS(t * 150); });
+
+    const toast = $('toast');
+    toast.style.opacity = still ? 0 : span(t, 7.2, 7.4);
+    toast.innerHTML = `${icon('check', 16, 2.25)}Saved Finn-shark.pdf`;
+
+    const c = $('cursor');
+    if (still) { c.style.display = 'none'; return; }
+    const [x, y] = cursorAt(t);
+    c.style.transform = `translate(${x}px, ${y}px) scale(${(t >= 3.45 && t < 3.6) || (t >= 7.05 && t < 7.2) ? 0.9 : 1})`;
+  };
+  if (location.search.includes('still')) seek(6.25, true); else seek(0);
+</script>

@@ -1,0 +1,63 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Furge Art Studio</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  .gallery { position: absolute; inset: 16px 16px 84px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .art { position: relative; overflow: hidden; border-radius: 12px; outline: 1px solid rgb(255 255 255 / 0.1); outline-offset: -1px; background: #000; }
+  .art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+  .art.on { outline: 2px solid var(--color-text-primary); outline-offset: 2px; }
+  .art span { position: absolute; left: 7px; bottom: 7px; max-width: calc(100% - 14px); padding: 3px 7px; border-radius: 10px; font-size: 10px; letter-spacing: -0.01em; font-weight: 500; color: #f5f5f7; background: rgb(0 0 0 / 0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .choice { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { padding: 5px 10px; border-radius: 13px; font-weight: 500; font-size: 12px; background: var(--color-fill-quiet); color: var(--color-text-muted); }
+  .chip.on { background: var(--color-fill-selected); color: var(--color-text-primary); }
+  .fine { margin: 0; font-size: 12px; line-height: 1.4; color: var(--color-text-muted); }
+</style>
+<div class="win">
+  <div id="side" style="display:contents"></div>
+  <main class="main">
+    <header class="bar">
+      <h1>Art</h1>
+      <div class="seg"><span class="on">All</span><span>Portraits</span><span>Stickers</span><span>Badges</span></div>
+    </header>
+    <div class="canvas">
+      <div class="gallery" id="g"></div>
+      <div class="prompt">
+        <div class="text">Bold portrait, any species, clean background</div>
+        <div class="btn" id="make"></div>
+      </div>
+    </div>
+  </main>
+  <aside class="insp">
+    <section>
+      <h3>Style</h3>
+      <div class="choice"><span class="chip on">Portrait</span><span class="chip">Sticker</span><span class="chip">Con badge</span><span class="chip">Toony</span><span class="chip">Painted</span></div>
+    </section>
+    <section>
+      <h3>Output</h3>
+      <div class="row"><span>Size</span><span class="num">1024 × 1024</span></div>
+      <div class="row"><span>Images</span><span class="num">6</span></div>
+      <div class="row"><span>Watermark</span><span class="num">None</span></div>
+      <div class="row"><span>Cost</span><span class="num">$0</span></div>
+    </section>
+    <section>
+      <h3>About this mockup</h3>
+      <p class="fine">Sample images by human artists under open licenses. They are not Furge output.</p>
+    </section>
+    <div class="foot">
+      <div class="btn solid" id="save"></div>
+      <div class="pair"><div class="btn">PNG</div><div class="btn">Copy</div></div>
+    </div>
+  </aside>
+</div>
+<script src="furge.js"></script>
+<script src="ui.js"></script>
+<script>
+  const { icon, sidebar } = FurgeUI;
+  document.getElementById('side').innerHTML = sidebar('Art');
+  document.getElementById('g').innerHTML = Furge.ART.map((a, i) =>
+    `<div class="art ${i === 0 ? 'on' : ''}"><img src="${Furge.IMG}${a.slug}.jpg" alt=""><span>${a.artist}, ${a.license}</span></div>`).join('');
+  document.getElementById('make').innerHTML = `${icon('sparkle', 15)}Generate`;
+  document.getElementById('save').innerHTML = `${icon('download', 15)}Save image`;
+</script>

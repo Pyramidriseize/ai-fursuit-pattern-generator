@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Furge ticker</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  #t { position: absolute; left: 0; top: 0; height: 60px; display: flex; align-items: center; white-space: nowrap; font: 600 25px/1 var(--font-display); letter-spacing: -0.02em; }
+  #t span { display: inline-flex; align-items: center; gap: 22px; padding-right: 22px; }
+</style>
+<div id="t"></div>
+<script src="furge.js"></script>
+<script src="ui.js"></script>
+<script>
+  const WORDS = ['No subscription', 'No credits', 'No account', 'No watermark', 'No installer', 'No cloud', '$0'];
+  const paw = (i) => `<svg width="24" height="24" viewBox="-300 -210 600 540"><defs>${Furge.pawDefs('p' + i)}</defs>${Furge.pawGlyph('p' + i, { stitch: false })}</svg>`;
+  let n = 0;
+  const seq = () => `<span>${WORDS.map((w) => `${w}${paw(n++)}`).join('</span><span>')}</span>`;
+  const el = document.getElementById('t');
+  el.innerHTML = seq() + seq();
+  const DUR = 4;
+  const measure = () => el.scrollWidth / 2;
+  window.seek = (t) => { el.style.transform = `translateX(${-(t / DUR) * measure()}px)`; };
+  seek(0);
+</script>

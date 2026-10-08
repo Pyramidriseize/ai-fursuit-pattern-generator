@@ -1,0 +1,68 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Furge portable</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  .drive { position: absolute; left: 30px; top: 40px; width: 490px; height: 360px; border-radius: 14px; background: var(--color-bg-surface); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.13); overflow: hidden; }
+  .drive header { height: 46px; display: flex; align-items: center; gap: 14px; padding: 0 14px; border-bottom: 1px solid var(--color-separator); font-weight: 600; }
+  .lights { display: flex; gap: 7px; padding: 0; }
+  .lights i { width: 11px; height: 11px; }
+  .path { display: flex; align-items: center; gap: 7px; }
+  .files { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 18px 20px; justify-items: center; text-align: center; font-size: 13px; font-weight: 500; }
+  .file { display: grid; justify-items: center; align-content: center; gap: 8px; height: 132px; width: 136px; border-radius: 12px; }
+  .file .ic { color: var(--color-text-muted); }
+  .file.sel { background: var(--color-fill-selected); }
+  .app { position: absolute; left: 105px; top: 92px; width: 340px; height: 266px; border-radius: 14px; background: var(--color-bg-raised); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18), 0 26px 60px rgb(0 0 0 / 0.75); display: grid; justify-items: center; align-content: center; text-align: center; }
+  .app h2 { margin: 12px 0 4px; font: 600 24px/1.1 var(--font-display); letter-spacing: -0.024em; }
+  .app p { margin: 0 0 14px; color: var(--color-text-muted); }
+  .copy { position: absolute; left: 556px; right: 24px; top: 98px; }
+  h1 { margin: 0 0 22px; font: 600 46px/1.06 var(--font-display); letter-spacing: -0.03em; }
+  .tick { display: flex; align-items: center; gap: 10px; height: 38px; font-size: 18px; font-weight: 500; letter-spacing: -0.012em; }
+</style>
+<div class="drive">
+  <header><div class="lights"><i></i><i></i><i></i></div><div class="path" id="path"></div></header>
+  <div class="files" id="files"></div>
+</div>
+<div class="app" id="app"><div id="appicon"></div><h2>Nothing to install.</h2><p>Furge runs from this drive.</p><div class="btn solid">Continue</div></div>
+<div class="copy">
+  <h1>Runs from a<br>USB stick.</h1>
+  <div id="ticks"></div>
+</div>
+<div id="cur" style="display:contents"></div>
+<script src="furge.js"></script>
+<script src="ui.js"></script>
+<script>
+  const { icon, cursorSVG, easeIO, ease, span } = FurgeUI;
+  const $ = (id) => document.getElementById(id);
+  $('path').innerHTML = `${icon('usb', 16)}FURGE (E:)`;
+  $('appicon').innerHTML = Furge.iconSVG({ size: 78, uid: 'a' });
+  $('cur').innerHTML = cursorSVG;
+  const render = (sel) => `
+    <div class="file ${sel ? 'sel' : ''}">${Furge.iconSVG({ size: 76, uid: 'f' })}Furge.exe</div>
+    <div class="file">${icon('folder', 62, 1.1)}models</div>
+    <div class="file">${icon('folder', 62, 1.1)}projects</div>
+    <div class="file">${icon('folder', 62, 1.1)}fursonas</div>
+    <div class="file">${icon('folder', 62, 1.1)}exports</div>
+    <div class="file">${icon('sheet', 62, 1.1)}README.txt</div>`;
+  const TICKS = ['No installer', 'No admin rights', 'Nothing left on the PC'];
+  const home = [440, 390], target = [122, 176];
+  window.seek = (t) => {
+    const m = easeIO(span(t, 0.3, 1.1));
+    const c = $('cursor');
+    const x = home[0] + (target[0] - home[0]) * m, y = home[1] + (target[1] - home[1]) * m;
+    const press = (t >= 1.25 && t < 1.35) || (t >= 1.5 && t < 1.6);
+    c.style.transform = `translate(${x}px, ${y}px) scale(${press ? 0.9 : 1})`;
+    c.style.opacity = 1 - span(t, 1.9, 2.1);
+    $('files').innerHTML = render(t >= 1.25);
+    const a = $('app');
+    const open = ease(span(t, 1.75, 2.15));
+    a.style.opacity = open;
+    a.style.scale = 0.9 + 0.1 * open;
+    $('ticks').innerHTML = TICKS.map((text, i) => {
+      const op = span(t, 2.5 + i * 0.5, 2.8 + i * 0.5);
+      return `<div class="tick" style="opacity:${op}">${icon('check', 20, 2.25)}${text}</div>`;
+    }).join('');
+  };
+  seek(0);
+</script>

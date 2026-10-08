@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Furge species</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  .tile { position: absolute; left: 56px; top: 44px; width: 332px; height: 332px; border-radius: 74px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12); }
+  .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .copy { position: absolute; left: 440px; right: 36px; top: 44px; }
+  h1 { margin: 0 0 18px; font: 600 50px/1.06 var(--font-display); letter-spacing: -0.03em; }
+  .names { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .names span { padding: 7px 14px; border-radius: 18px; font-size: 15px; font-weight: 600; color: var(--color-text-muted); background: var(--color-fill-quiet); }
+  .names span.on { color: var(--color-action-label); background: var(--color-action-solid); }
+  p { margin: 0 0 16px; max-width: 42ch; font-size: 19px; line-height: 1.35; color: var(--color-text-muted); letter-spacing: -0.014em; }
+  .credit { font-size: 13px; line-height: 1.4; letter-spacing: 0; margin: 0; max-width: none; }
+</style>
+<div class="tile" id="tile"></div>
+<div class="copy">
+  <h1>Any species.<br>Any style.</h1>
+  <div class="names" id="names"></div>
+  <p>Fur, feathers, scales. Describe your fursona and Furge goes to work.</p>
+  <p class="credit" id="credit"></p>
+</div>
+<script src="furge.js"></script>
+<script src="ui.js"></script>
+<script>
+  const { span, easeIO } = FurgeUI;
+  const { ART, IMG } = Furge;
+  const STEP = 1.2, FADE = 0.25;
+  const tile = document.getElementById('tile');
+  tile.innerHTML = ART.map((a) => `<img src="${IMG}${a.slug}.jpg" alt="">`).join('');
+  const layers = [...tile.children];
+  // Each image holds, then the next fades in over it. Labels swap at the midpoint, so a credit never sits on the wrong art.
+  window.seek = (t) => {
+    const i = Math.floor(t / STEP) % ART.length;
+    const next = (i + 1) % ART.length;
+    const k = easeIO(span(t % STEP, STEP - FADE, STEP));
+    layers.forEach((l, n) => {
+      l.style.display = n === i || (n === next && k > 0) ? 'block' : 'none';
+      l.style.zIndex = n === next ? 2 : 1;
+      l.style.opacity = n === next ? k : 1;
+    });
+    const shown = k > 0.5 ? next : i;
+    document.getElementById('names').innerHTML = ART.map((a, n) => `<span class="${n === shown ? 'on' : ''}">${a.species}</span>`).join('');
+    document.getElementById('credit').innerHTML = `Sample art by ${ART[shown].artist}, ${ART[shown].license}.<br>Made by a human artist, not by Furge.`;
+  };
+  seek(0);
+</script>

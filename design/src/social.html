@@ -1,0 +1,13 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Furge social preview</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="ui.css">
+<style>
+  .s { position: absolute; inset: 0; display: grid; justify-items: center; align-content: center; text-align: center; }
+  h1 { margin: 20px 0 0; font: 600 72px/1.06 var(--font-display); letter-spacing: -0.032em; }
+  h1 div:last-child { width: fit-content; margin-inline: auto; background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
+</style>
+<div class="s"><div id="i"></div><h1><div>Fursuit patterns and furry art.</div><div>Free. No catch.</div></h1></div>
+<script src="furge.js"></script>
+<script>document.getElementById('i').innerHTML = Furge.iconSVG({ size: 190, uid: 's' });</script>
