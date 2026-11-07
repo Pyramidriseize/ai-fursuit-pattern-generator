@@ -108,12 +108,11 @@ settings and the Furge runtime, so nothing else has to be installed:
 
 | System | File |
 |---|---|
-| Windows 10 and 11 | [`ai-fursuit-pattern-generator.zip`](releases/latest) |
+| Windows 10 and 11 | [`Furge-0.1.1-portable-x64.exe`](releases/latest) |
 
-Unpack the whole folder and start `Main.exe`. No installer, no admin rights.
+Download and start the exe. No installer, no admin rights.
 
-`Main.exe` is code-signed, so Windows starts it without a warning. Keep
-`Furge` next to it: they ship together.
+The build is not code-signed yet, so SmartScreen may warn once: choose **More info**, then **Run anyway**.
 
 <p align="center">
   <img src="assets/readme/portable.gif" alt="A USB drive window holds Furge.exe and two folders. A double-click opens Furge with the title: Nothing to install. A list ticks off no installer, no admin rights, nothing left on the PC." width="100%">
