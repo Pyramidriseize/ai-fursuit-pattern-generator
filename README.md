@@ -143,7 +143,7 @@ Yes. Your GPU does the work, so there's no server bill to pass on to you. No tie
 You supply the GPU, and you still have to sew. Furge cuts the pattern bill, not the work.
 
 **Can I use it today?**
-Yes — grab the zip from [releases](releases/latest), unpack the whole folder and start `Main.exe`. The FreeSewing sheets in [`assets/blueprints/freesewing`](assets/blueprints/freesewing) are printable on their own.
+Yes — grab the zip from [releases](releases/latest), Download and start `Main.exe`. The FreeSewing sheets in [`assets/blueprints/freesewing`](assets/blueprints/freesewing) are printable on their own.
 
 **Will this replace my favorite maker?**
 No. A great suit takes years of skill that no pattern file contains. Furge is for people who want to build their own. If you want a masterpiece, commission a maker and pay them what they ask.
