@@ -108,7 +108,7 @@ settings and the Furge runtime, so nothing else has to be installed:
 
 | System | File |
 |---|---|
-| Windows 10 and 11 | [`Furge-0.1.1-portable-x64.exe`](releases/latest) |
+| Windows 10 and 11 | [`Fursuit.exe`](releases/latest) |
 
 Download and start the exe. No installer, no admin rights.
 
